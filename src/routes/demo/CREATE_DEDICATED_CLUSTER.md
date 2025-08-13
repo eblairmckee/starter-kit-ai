@@ -1,3 +1,5 @@
+Process for using the `redpanda-ui` mcp with `figma-dev-mode` mcp to recreate [this figma frame](https://www.figma.com/design/t7IrgHK9zT8APyFIk1Y9XW/RedPanda-Design-System?node-id=2413-44614&m=dev).
+
 # Phase 1
 prompt
 ```
@@ -91,9 +93,30 @@ ultrathink. a few components in @src/routes/demo/create-dedicated-cluster.tsx ac
    more suitable
   ```
 
+# Phase 4
+prompt
+```
+ultrathink. i disagree, this will be a multistep form, we should use the redpanda progress stepper. if you want to create multiple components in this file for each step, that's preferable. 
+```
+
+response
+```
+     ☐ Study Redpanda stepper component API and usage patterns
+     ☐ Define steps for the multistep form (Cluster settings, Network settings, etc.)
+     ☐ Replace custom ProgressStepper with Redpanda stepper implementation
+     ☐ Create separate step components for each form section
+     ☐ Implement proper step navigation and state management
+```
+
 ## MCP Tools Leveraged
 
 ### Redpanda UI MCP Server
+```bash
+mcp__redpanda-ui__get_component_demo
+```
+- Attempted to find stepper demo examples
+- Analyzed component file directly when demo not available
+- Successfully implemented defineStepper with proper step architecture
 ```bash
 mcp__redpanda-ui__recommend-components
 mcp__redpanda-ui__list_components
@@ -102,3 +125,26 @@ mcp__redpanda-ui__get_component
 - Identified available typography, form, navigation, and stepper components
 - Evaluated component complexity vs. current implementations
 - Successfully integrated Label, Heading, and Text components
+
+# Phase 4
+prompt
+```
+ultrathink. i disagree, this will be a multistep form, we should use the redpanda progress stepper. if you want to create multiple 
+  components in this file for each step, that's preferable.
+  ```
+
+response
+```
+- Study Redpanda stepper API: Used defineStepper from @stepperize/react
+  - Defined multistep form: Created "cluster-settings" and "network-settings" steps
+  - Replaced custom stepper: Now using proper Stepper.Navigation and step components
+  - Created separate step components: ClusterSettingsStep and NetworkSettingsStep
+  - Implemented navigation: Proper next/prev with Stepper.Controls
+  ```
+
+# ACTION ITEMS
+- not all components are indexed (eg: stepper) only 48 currently indexed, but we know there are 70+
+- need a navbar component
+- need a formfield (label/slots) component
+- add figma-dev-mode mcp setup instructions
+- add playwright setup instructions so mcp can compare rendered UI with figma

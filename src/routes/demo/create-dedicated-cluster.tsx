@@ -11,6 +11,7 @@ import { Choicebox, ChoiceboxItem, ChoiceboxItemHeader, ChoiceboxItemTitle, Choi
 import { AwsIcon, AzureIcon, GcpIcon } from '@/components/redpanda-ui/icons';
 import { Heading, Text } from '@/components/redpanda-ui/typography';
 import { Label } from '@/components/redpanda-ui/label';
+import { defineStepper } from '@/components/redpanda-ui/stepper';
 
 // Navigation Header Component
 function NavigationHeader() {
@@ -59,30 +60,11 @@ function NavigationHeader() {
   );
 }
 
-// Progress Stepper Component
-function ProgressStepper() {
-  return (
-    <div className="flex items-center space-x-4">
-      {/* Step 1 - Active */}
-      <div className="flex items-center space-x-3">
-        <div className="w-8 h-8 bg-white text-gray-900 rounded-full flex items-center justify-center font-semibold text-sm">
-          1
-        </div>
-        <span className="text-white font-medium text-sm">Cluster</span>
-      </div>
-      
-      <div className="w-8 h-px bg-gray-500"></div>
-      
-      {/* Step 2 - Inactive */}
-      <div className="flex items-center space-x-3">
-        <div className="w-8 h-8 bg-transparent border-2 border-gray-500 text-gray-300 rounded-full flex items-center justify-center font-semibold text-sm">
-          2
-        </div>
-        <span className="text-gray-300 font-medium text-sm">Cluster</span>
-      </div>
-    </div>
-  );
-}
+// Define stepper steps
+const { Stepper, useStepper } = defineStepper(
+  { id: 'cluster-settings', title: 'Cluster Settings' },
+  { id: 'network-settings', title: 'Network Settings' }
+);
 
 
 
@@ -120,6 +102,216 @@ function SummaryRow({ label, value }: SummaryRowProps) {
       <Text as="div" variant="muted" className="text-sm text-gray-500 w-36">{label}</Text>
       <Text as="div" variant="small" className="text-sm font-medium text-gray-700 flex-1">{value}</Text>
     </div>
+  );
+}
+
+// Cluster Settings Step Component
+function ClusterSettingsStepContent({ formData, updateFormData, methods }: {
+  formData: any;
+  updateFormData: (field: string, value: string) => void;
+  methods: any;
+}) {
+  
+  return (
+    <Stepper.Panel>
+      <Card className="bg-white shadow-sm border border-gray-200 p-6">
+        <div className="space-y-8">
+          {/* Form Header */}
+          <div className="space-y-4">
+            <Heading level={2} className="text-2xl font-medium text-gray-900">Cluster settings</Heading>
+            <Text variant="muted" className="text-gray-600 text-sm leading-relaxed">
+              Configure your Redpanda cluster to meet your workload requirements. 
+              Select the cloud provider, region, and availability zones that meet your requirements.
+            </Text>
+          </div>
+          
+          {/* Form Fields */}
+          <div className="space-y-6">
+            {/* Cluster Name */}
+            <FormField label="Cluster name" optional>
+              <Input 
+                value={formData.clusterName}
+                onChange={(e) => updateFormData('clusterName', e.target.value)}
+                placeholder="green-marine-lion"
+                className="h-9"
+              />
+            </FormField>
+            
+            {/* Provider */}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium text-gray-900">Provider</Label>
+              <Choicebox value={formData.provider} onValueChange={(value) => updateFormData('provider', value)} className="flex space-x-4">
+                <ChoiceboxItem value="aws" className="min-w-[120px]">
+                  <ChoiceboxItemHeader className="flex-1">
+                    <ChoiceboxItemTitle className="flex items-center justify-center gap-2">
+                      <AwsIcon className="h-5 w-8" />
+                      <span className="text-sm font-semibold">AWS</span>
+                    </ChoiceboxItemTitle>
+                  </ChoiceboxItemHeader>
+                  <ChoiceboxItemContent>
+                    <ChoiceboxItemIndicator />
+                  </ChoiceboxItemContent>
+                </ChoiceboxItem>
+                
+                <ChoiceboxItem value="gcp" className="min-w-[120px]">
+                  <ChoiceboxItemHeader className="flex-1">
+                    <ChoiceboxItemTitle className="flex items-center justify-center gap-2">
+                      <GcpIcon className="h-5 w-8" />
+                      <span className="text-sm font-semibold">GCP</span>
+                    </ChoiceboxItemTitle>
+                  </ChoiceboxItemHeader>
+                  <ChoiceboxItemContent>
+                    <ChoiceboxItemIndicator />
+                  </ChoiceboxItemContent>
+                </ChoiceboxItem>
+                
+                <ChoiceboxItem value="azure" className="min-w-[120px]">
+                  <ChoiceboxItemHeader className="flex-1">
+                    <ChoiceboxItemTitle className="flex items-center justify-center gap-2">
+                      <AzureIcon className="h-5 w-8" />
+                      <span className="text-sm font-semibold">Azure</span>
+                    </ChoiceboxItemTitle>
+                  </ChoiceboxItemHeader>
+                  <ChoiceboxItemContent>
+                    <ChoiceboxItemIndicator />
+                  </ChoiceboxItemContent>
+                </ChoiceboxItem>
+              </Choicebox>
+            </div>
+            
+            {/* Region */}
+            <FormField label="Region" optional>
+              <Select value={formData.region} onValueChange={(value) => updateFormData('region', value)}>
+                <SelectTrigger className="h-9">
+                  <SelectValue placeholder="Select region" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="us-east-1">us-east-1</SelectItem>
+                  <SelectItem value="us-east-2">us-east-2</SelectItem>
+                  <SelectItem value="us-west-1">us-west-1</SelectItem>
+                  <SelectItem value="us-west-2">us-west-2</SelectItem>
+                </SelectContent>
+              </Select>
+            </FormField>
+            
+            {/* Availability */}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium text-gray-900">Availability</Label>
+              <Choicebox value={formData.availability} onValueChange={(value) => updateFormData('availability', value)} className="flex space-x-4">
+                <ChoiceboxItem value="single-az" className="min-w-[120px]">
+                  <ChoiceboxItemHeader className="flex-1">
+                    <ChoiceboxItemTitle className="text-sm font-medium">
+                      Single AZ
+                    </ChoiceboxItemTitle>
+                  </ChoiceboxItemHeader>
+                  <ChoiceboxItemContent>
+                    <ChoiceboxItemIndicator />
+                  </ChoiceboxItemContent>
+                </ChoiceboxItem>
+                
+                <ChoiceboxItem value="multi-az" className="min-w-[120px]">
+                  <ChoiceboxItemHeader className="flex-1">
+                    <ChoiceboxItemTitle className="text-sm font-medium">
+                      Multi AZ
+                    </ChoiceboxItemTitle>
+                  </ChoiceboxItemHeader>
+                  <ChoiceboxItemContent>
+                    <ChoiceboxItemIndicator />
+                  </ChoiceboxItemContent>
+                </ChoiceboxItem>
+              </Choicebox>
+            </div>
+            
+            {/* Zone Selection */}
+            <FormField label="Select a zone">
+              <Select value={formData.zone} onValueChange={(value) => updateFormData('zone', value)}>
+                <SelectTrigger className="h-9">
+                  <SelectValue placeholder="Select zone" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="use2-az1">use2-az1</SelectItem>
+                  <SelectItem value="use2-az2">use2-az2</SelectItem>
+                  <SelectItem value="use2-az3">use2-az3</SelectItem>
+                </SelectContent>
+              </Select>
+            </FormField>
+            
+            {/* Tiers */}
+            <FormField label="Tiers">
+              <Select value={formData.tier} onValueChange={(value) => updateFormData('tier', value)}>
+                <SelectTrigger className="h-9">
+                  <SelectValue placeholder="Select tier" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="tier-1">Tier 1 (20 MBps max write / 60 MBps max read)</SelectItem>
+                  <SelectItem value="tier-2">Tier 2 (40 MBps max write / 120 MBps max read)</SelectItem>
+                </SelectContent>
+              </Select>
+            </FormField>
+            
+            {/* Label */}
+            <FormField label="Label">
+              <Input 
+                value={formData.label}
+                onChange={(e) => updateFormData('label', e.target.value)}
+                placeholder="Content"
+                className="h-9"
+              />
+            </FormField>
+            
+            {/* Redpanda Version */}
+            <FormField label="Redpanda version">
+              <Input 
+                value={formData.redpandaVersion}
+                onChange={(e) => updateFormData('redpandaVersion', e.target.value)}
+                placeholder="23.2.18"
+                className="h-9"
+              />
+            </FormField>
+          </div>
+        </div>
+        
+        {/* Form Actions */}
+        <Stepper.Controls>
+          <Button size="lg" onClick={methods.next} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md">
+            Next
+            <ArrowRight className="w-4 h-4 ml-2" />
+          </Button>
+        </Stepper.Controls>
+      </Card>
+    </Stepper.Panel>
+  );
+}
+
+// Network Settings Step Component 
+function NetworkSettingsStepContent({ formData, methods }: { formData: any; methods: any }) {
+  
+  return (
+    <Stepper.Panel>
+      <Card className="bg-white shadow-sm border border-gray-200 p-6">
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <Heading level={2} className="text-2xl font-medium text-gray-900">Network settings</Heading>
+            <Text variant="muted" className="text-gray-600 text-sm leading-relaxed">
+              Configure network and security settings for your cluster.
+            </Text>
+          </div>
+          
+          <div className="space-y-6">
+            <Text>Network configuration options will go here...</Text>
+          </div>
+        </div>
+        
+        <Stepper.Controls>
+          <Button variant="outline" onClick={methods.prev}>
+            Back
+          </Button>
+          <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md">
+            Create Cluster
+          </Button>
+        </Stepper.Controls>
+      </Card>
+    </Stepper.Panel>
   );
 }
 
@@ -189,205 +381,58 @@ export default function CreateDedicatedCluster() {
             </div>
             
             {/* Progress Stepper */}
-            <ProgressStepper />
-          </div>
-        </div>
-      </div>
-      
-      {/* Main Content */}
-      <div className="max-w-screen-xl mx-auto px-6 lg:px-8 -mt-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Form */}
-          <div className="lg:col-span-2">
-            <Card className="bg-white shadow-sm border border-gray-200 p-6">
-              <div className="space-y-8">
-                {/* Form Header */}
-                <div className="space-y-4">
-                  <Heading level={2} className="text-2xl font-medium text-gray-900">Cluster settings</Heading>
-                  <Text variant="muted" className="text-gray-600 text-sm leading-relaxed">
-                    Configure your Redpanda cluster to meet your workload requirements. 
-                    Select the cloud provider, region, and availability zones that meet your requirements.
-                  </Text>
-                </div>
-                
-                {/* Form Fields */}
-                <div className="space-y-6">
-                  {/* Cluster Name */}
-                  <FormField label="Cluster name" optional>
-                    <Input 
-                      value={formData.clusterName}
-                      onChange={(e) => updateFormData('clusterName', e.target.value)}
-                      placeholder="green-marine-lion"
-                      className="h-9"
-                    />
-                  </FormField>
+            <Stepper.Provider className="space-y-4" variant="horizontal">
+              {({ methods }) => (
+                <React.Fragment>
+                  <Stepper.Navigation className="flex items-center space-x-4">
+                    {methods.all.map((step) => (
+                      <Stepper.Step key={step.id} of={step.id} onClick={() => methods.goTo(step.id)} className="flex items-center space-x-3">
+                        <Stepper.Title className={methods.current.id === step.id ? "text-white font-medium text-sm" : "text-gray-300 font-medium text-sm"}>
+                          {step.title}
+                        </Stepper.Title>
+                      </Stepper.Step>
+                    ))}
+                  </Stepper.Navigation>
                   
-                  {/* Provider */}
-                  <div className="space-y-3">
-                    <Label className="text-sm font-medium text-gray-900">Provider</Label>
-                    <Choicebox value={formData.provider} onValueChange={(value) => updateFormData('provider', value)} className="flex space-x-4">
-                      <ChoiceboxItem value="aws" className="min-w-[120px]">
-                        <ChoiceboxItemHeader className="flex-1">
-                          <ChoiceboxItemTitle className="flex items-center justify-center gap-2">
-                            <AwsIcon className="h-5 w-8" />
-                            <span className="text-sm font-semibold">AWS</span>
-                          </ChoiceboxItemTitle>
-                        </ChoiceboxItemHeader>
-                        <ChoiceboxItemContent>
-                          <ChoiceboxItemIndicator />
-                        </ChoiceboxItemContent>
-                      </ChoiceboxItem>
+                  {/* Main Content */}
+                  <div className="max-w-screen-xl mx-auto px-6 lg:px-8 -mt-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                      {/* Main Form */}
+                      <div className="lg:col-span-2">
+                        {methods.switch({
+                          'cluster-settings': () => <ClusterSettingsStepContent formData={formData} updateFormData={updateFormData} methods={methods} />,
+                          'network-settings': () => <NetworkSettingsStepContent formData={formData} methods={methods} />
+                        })}
+                      </div>
                       
-                      <ChoiceboxItem value="gcp" className="min-w-[120px]">
-                        <ChoiceboxItemHeader className="flex-1">
-                          <ChoiceboxItemTitle className="flex items-center justify-center gap-2">
-                            <GcpIcon className="h-5 w-8" />
-                            <span className="text-sm font-semibold">GCP</span>
-                          </ChoiceboxItemTitle>
-                        </ChoiceboxItemHeader>
-                        <ChoiceboxItemContent>
-                          <ChoiceboxItemIndicator />
-                        </ChoiceboxItemContent>
-                      </ChoiceboxItem>
-                      
-                      <ChoiceboxItem value="azure" className="min-w-[120px]">
-                        <ChoiceboxItemHeader className="flex-1">
-                          <ChoiceboxItemTitle className="flex items-center justify-center gap-2">
-                            <AzureIcon className="h-5 w-8" />
-                            <span className="text-sm font-semibold">Azure</span>
-                          </ChoiceboxItemTitle>
-                        </ChoiceboxItemHeader>
-                        <ChoiceboxItemContent>
-                          <ChoiceboxItemIndicator />
-                        </ChoiceboxItemContent>
-                      </ChoiceboxItem>
-                    </Choicebox>
+                      {/* Summary Panel */}
+                      <div className="lg:col-span-1">
+                        <Card className="bg-gray-50 shadow-sm border border-gray-200 p-6">
+                          <div className="space-y-6">
+                            {/* Summary Header */}
+                            <div>
+                              <Heading level={3} className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+                                SUMMARY
+                              </Heading>
+                            </div>
+                            
+                            {/* Summary Content */}
+                            <div className="space-y-2">
+                              <SummaryRow label="Cluster name" value={formData.clusterName} />
+                              <SummaryRow label="Provider" value="AWS" />
+                              <SummaryRow label="Region" value={formData.region} />
+                              <SummaryRow label="Zones" value={formData.zone} />
+                              <SummaryRow label="Tier" value="Tier 1" />
+                              <SummaryRow label="Tier" value="Tier 1" />
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+                    </div>
                   </div>
-                  
-                  {/* Region */}
-                  <FormField label="Region" optional>
-                    <Select value={formData.region} onValueChange={(value) => updateFormData('region', value)}>
-                      <SelectTrigger className="h-9">
-                        <SelectValue placeholder="Select region" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="us-east-1">us-east-1</SelectItem>
-                        <SelectItem value="us-east-2">us-east-2</SelectItem>
-                        <SelectItem value="us-west-1">us-west-1</SelectItem>
-                        <SelectItem value="us-west-2">us-west-2</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormField>
-                  
-                  {/* Availability */}
-                  <div className="space-y-3">
-                    <Label className="text-sm font-medium text-gray-900">Availability</Label>
-                    <Choicebox value={formData.availability} onValueChange={(value) => updateFormData('availability', value)} className="flex space-x-4">
-                      <ChoiceboxItem value="single-az" className="min-w-[120px]">
-                        <ChoiceboxItemHeader className="flex-1">
-                          <ChoiceboxItemTitle className="text-sm font-medium">
-                            Single AZ
-                          </ChoiceboxItemTitle>
-                        </ChoiceboxItemHeader>
-                        <ChoiceboxItemContent>
-                          <ChoiceboxItemIndicator />
-                        </ChoiceboxItemContent>
-                      </ChoiceboxItem>
-                      
-                      <ChoiceboxItem value="multi-az" className="min-w-[120px]">
-                        <ChoiceboxItemHeader className="flex-1">
-                          <ChoiceboxItemTitle className="text-sm font-medium">
-                            Multi AZ
-                          </ChoiceboxItemTitle>
-                        </ChoiceboxItemHeader>
-                        <ChoiceboxItemContent>
-                          <ChoiceboxItemIndicator />
-                        </ChoiceboxItemContent>
-                      </ChoiceboxItem>
-                    </Choicebox>
-                  </div>
-                  
-                  {/* Zone Selection */}
-                  <FormField label="Select a zone">
-                    <Select value={formData.zone} onValueChange={(value) => updateFormData('zone', value)}>
-                      <SelectTrigger className="h-9">
-                        <SelectValue placeholder="Select zone" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="use2-az1">use2-az1</SelectItem>
-                        <SelectItem value="use2-az2">use2-az2</SelectItem>
-                        <SelectItem value="use2-az3">use2-az3</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormField>
-                  
-                  {/* Tiers */}
-                  <FormField label="Tiers">
-                    <Select value={formData.tier} onValueChange={(value) => updateFormData('tier', value)}>
-                      <SelectTrigger className="h-9">
-                        <SelectValue placeholder="Select tier" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="tier-1">Tier 1 (20 MBps max write / 60 MBps max read)</SelectItem>
-                        <SelectItem value="tier-2">Tier 2 (40 MBps max write / 120 MBps max read)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormField>
-                  
-                  {/* Label */}
-                  <FormField label="Label">
-                    <Input 
-                      value={formData.label}
-                      onChange={(e) => updateFormData('label', e.target.value)}
-                      placeholder="Content"
-                      className="h-9"
-                    />
-                  </FormField>
-                  
-                  {/* Redpanda Version */}
-                  <FormField label="Redpanda version">
-                    <Input 
-                      value={formData.redpandaVersion}
-                      onChange={(e) => updateFormData('redpandaVersion', e.target.value)}
-                      placeholder="23.2.18"
-                      className="h-9"
-                    />
-                  </FormField>
-                </div>
-              </div>
-              
-              {/* Form Actions */}
-              <div className="mt-8 pt-6">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md">
-                  Next
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            </Card>
-          </div>
-          
-          {/* Summary Panel */}
-          <div className="lg:col-span-1">
-            <Card className="bg-gray-50 shadow-sm border border-gray-200 p-6">
-              <div className="space-y-6">
-                {/* Summary Header */}
-                <div>
-                  <Heading level={3} className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
-                    SUMMARY
-                  </Heading>
-                </div>
-                
-                {/* Summary Content */}
-                <div className="space-y-2">
-                  <SummaryRow label="Cluster name" value={formData.clusterName} />
-                  <SummaryRow label="Provider" value="AWS" />
-                  <SummaryRow label="Region" value={formData.region} />
-                  <SummaryRow label="Zones" value={formData.zone} />
-                  <SummaryRow label="Tier" value="Tier 1" />
-                  <SummaryRow label="Tier" value="Tier 1" />
-                </div>
-              </div>
-            </Card>
+                </React.Fragment>
+              )}
+            </Stepper.Provider>
           </div>
         </div>
       </div>
