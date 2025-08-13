@@ -9,6 +9,8 @@ import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbS
 import { Card } from '@/components/redpanda-ui/card';
 import { Choicebox, ChoiceboxItem, ChoiceboxItemHeader, ChoiceboxItemTitle, ChoiceboxItemContent, ChoiceboxItemIndicator } from '@/components/redpanda-ui/choicebox';
 import { AwsIcon, AzureIcon, GcpIcon } from '@/components/redpanda-ui/icons';
+import { Heading, Text } from '@/components/redpanda-ui/typography';
+import { Label } from '@/components/redpanda-ui/label';
 
 // Navigation Header Component
 function NavigationHeader() {
@@ -89,15 +91,16 @@ interface FormFieldProps {
   label: string;
   optional?: boolean;
   children: React.ReactNode;
+  htmlFor?: string;
 }
 
-function FormField({ label, optional, children }: FormFieldProps) {
+function FormField({ label, optional, children, htmlFor }: FormFieldProps) {
   return (
     <div className="space-y-2">
       <div className="flex items-center space-x-1">
-        <label className="text-sm font-medium text-gray-900">{label}</label>
+        <Label htmlFor={htmlFor} className="text-sm font-medium text-gray-900">{label}</Label>
         {optional && (
-          <span className="text-sm text-gray-500">(Optional)</span>
+          <Text as="span" variant="muted" className="text-sm text-gray-500">(Optional)</Text>
         )}
       </div>
       {children}
@@ -114,8 +117,8 @@ interface SummaryRowProps {
 function SummaryRow({ label, value }: SummaryRowProps) {
   return (
     <div className="flex items-center space-x-3">
-      <div className="text-sm text-gray-500 w-36">{label}</div>
-      <div className="text-sm font-medium text-gray-700 flex-1">{value}</div>
+      <Text as="div" variant="muted" className="text-sm text-gray-500 w-36">{label}</Text>
+      <Text as="div" variant="small" className="text-sm font-medium text-gray-700 flex-1">{value}</Text>
     </div>
   );
 }
@@ -180,9 +183,9 @@ export default function CreateDedicatedCluster() {
             
             {/* Page Title */}
             <div>
-              <h1 className="text-white text-3xl font-medium tracking-tight">
+              <Heading level={1} className="text-white text-3xl font-medium tracking-tight">
                 Create Dedicated cluster
-              </h1>
+              </Heading>
             </div>
             
             {/* Progress Stepper */}
@@ -200,11 +203,11 @@ export default function CreateDedicatedCluster() {
               <div className="space-y-8">
                 {/* Form Header */}
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-medium text-gray-900">Cluster settings</h2>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <Heading level={2} className="text-2xl font-medium text-gray-900">Cluster settings</Heading>
+                  <Text variant="muted" className="text-gray-600 text-sm leading-relaxed">
                     Configure your Redpanda cluster to meet your workload requirements. 
                     Select the cloud provider, region, and availability zones that meet your requirements.
-                  </p>
+                  </Text>
                 </div>
                 
                 {/* Form Fields */}
@@ -221,7 +224,7 @@ export default function CreateDedicatedCluster() {
                   
                   {/* Provider */}
                   <div className="space-y-3">
-                    <label className="text-sm font-medium text-gray-900">Provider</label>
+                    <Label className="text-sm font-medium text-gray-900">Provider</Label>
                     <Choicebox value={formData.provider} onValueChange={(value) => updateFormData('provider', value)} className="flex space-x-4">
                       <ChoiceboxItem value="aws" className="min-w-[120px]">
                         <ChoiceboxItemHeader className="flex-1">
@@ -278,7 +281,7 @@ export default function CreateDedicatedCluster() {
                   
                   {/* Availability */}
                   <div className="space-y-3">
-                    <label className="text-sm font-medium text-gray-900">Availability</label>
+                    <Label className="text-sm font-medium text-gray-900">Availability</Label>
                     <Choicebox value={formData.availability} onValueChange={(value) => updateFormData('availability', value)} className="flex space-x-4">
                       <ChoiceboxItem value="single-az" className="min-w-[120px]">
                         <ChoiceboxItemHeader className="flex-1">
@@ -369,9 +372,9 @@ export default function CreateDedicatedCluster() {
               <div className="space-y-6">
                 {/* Summary Header */}
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+                  <Heading level={3} className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
                     SUMMARY
-                  </h3>
+                  </Heading>
                 </div>
                 
                 {/* Summary Content */}

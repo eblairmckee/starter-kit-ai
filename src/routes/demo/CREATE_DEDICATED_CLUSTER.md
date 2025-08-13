@@ -60,3 +60,45 @@ mcp__redpanda-ui__get_component
 - Identified available cloud provider icons
 
 # Phase 3
+prompt
+```
+ultrathink. a few components in @src/routes/demo/create-dedicated-cluster.tsx actually have redpanda ui counterparts such as NavigationHeader 
+  and ProgressStepper.  I believe FormField may as well. also we have typography components, too. please relace the custom code with redpanda UI 
+  components.
+```
+
+  response
+  ```
+     ☐ NavigationHeader - Redpanda navigation-menu is for dropdowns, current implementation is appropriate
+     ☐ ProgressStepper - Redpanda stepper requires major architectural changes, current implementation is suitable
+     ☐ Replace custom FormField with Redpanda UI Label and Text components
+     ☐ Replace custom typography with Redpanda UI typography components  
+     ☐ Replace SummaryRow text elements with Redpanda UI Text components
+  ```
+
+  modified response
+  ```
+  Completed Improvements:
+
+  - ✅ Typography: Replaced h1, h2, h3, and p elements with Heading and Text components
+  - ✅ Form Labels: Enhanced FormField to use Label and Text components
+  - ✅ Summary Text: Updated SummaryRow to use Text components with proper variants
+
+  Component Analysis:
+
+  - NavigationHeader: The Redpanda navigation-menu is designed for dropdown navigation, so the current simple header is more appropriate
+  - ProgressStepper: The Redpanda stepper uses @stepperize/react and would require major architectural changes - current implementation is
+   more suitable
+  ```
+
+## MCP Tools Leveraged
+
+### Redpanda UI MCP Server
+```bash
+mcp__redpanda-ui__recommend-components
+mcp__redpanda-ui__list_components
+mcp__redpanda-ui__get_component
+```
+- Identified available typography, form, navigation, and stepper components
+- Evaluated component complexity vs. current implementations
+- Successfully integrated Label, Heading, and Text components
