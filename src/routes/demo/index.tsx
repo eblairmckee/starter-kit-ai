@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { PageDemo } from './page-demo';
+import CreateDedicatedCluster from './create-dedicated-cluster';
 
 export const demoRouter = createBrowserRouter([
   {
@@ -15,6 +16,11 @@ export const demoRouter = createBrowserRouter([
         element: <PageDemo />,
       },
     ],
+  },
+  {
+    path: 'create-dedicated-cluster',
+    element: <CreateDedicatedCluster />,
+    
   },
 ]);
 

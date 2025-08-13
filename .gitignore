@@ -1,6 +1,8 @@
 # deps
 /node_modules
 
+/cache
+
 # test & build
 /coverage
 /.next/
