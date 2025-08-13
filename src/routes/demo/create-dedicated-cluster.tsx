@@ -7,7 +7,8 @@ import { Input } from '@/components/redpanda-ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/redpanda-ui/select';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from '@/components/redpanda-ui/breadcrumb';
 import { Card } from '@/components/redpanda-ui/card';
-import { cn } from '@/lib/utils';
+import { Choicebox, ChoiceboxItem, ChoiceboxItemHeader, ChoiceboxItemTitle, ChoiceboxItemContent, ChoiceboxItemIndicator } from '@/components/redpanda-ui/choicebox';
+import { AwsIcon, AzureIcon, GcpIcon } from '@/components/redpanda-ui/icons';
 
 // Navigation Header Component
 function NavigationHeader() {
@@ -59,99 +60,29 @@ function NavigationHeader() {
 // Progress Stepper Component
 function ProgressStepper() {
   return (
-    <div className="flex items-center space-x-3">
+    <div className="flex items-center space-x-4">
       {/* Step 1 - Active */}
       <div className="flex items-center space-x-3">
-        <div className="w-8 h-8 bg-white text-gray-900 rounded-full flex items-center justify-center font-medium text-base">
+        <div className="w-8 h-8 bg-white text-gray-900 rounded-full flex items-center justify-center font-semibold text-sm">
           1
         </div>
-        <span className="text-white font-medium text-base">Cluster</span>
-        <div className="w-10 h-px bg-gray-500"></div>
+        <span className="text-white font-medium text-sm">Cluster</span>
       </div>
+      
+      <div className="w-8 h-px bg-gray-500"></div>
       
       {/* Step 2 - Inactive */}
       <div className="flex items-center space-x-3">
-        <div className="w-8 h-8 bg-gray-800 border border-gray-300 text-white rounded-full flex items-center justify-center font-medium text-base">
+        <div className="w-8 h-8 bg-transparent border-2 border-gray-500 text-gray-300 rounded-full flex items-center justify-center font-semibold text-sm">
           2
         </div>
-        <span className="text-white font-medium text-base">Cluster</span>
+        <span className="text-gray-300 font-medium text-sm">Cluster</span>
       </div>
     </div>
   );
 }
 
-// Provider Card Component
-interface ProviderCardProps {
-  selected: boolean;
-  onClick: () => void;
-}
 
-function ProviderCard({ selected, onClick }: ProviderCardProps) {
-  return (
-    <div 
-      onClick={onClick}
-      className={cn(
-        "relative border rounded-lg px-20 py-8 cursor-pointer transition-colors",
-        selected 
-          ? "bg-blue-50 border-blue-200" 
-          : "bg-white border-gray-200 hover:border-gray-300"
-      )}
-    >
-      {/* AWS Logo placeholder */}
-      <div className="w-16 h-6 bg-orange-400 rounded flex items-center justify-center text-white font-bold text-xs">
-        AWS
-      </div>
-      
-      {/* Radio button */}
-      <div className={cn(
-        "absolute left-3 top-3 w-5 h-5 rounded-full border-2 flex items-center justify-center",
-        selected 
-          ? "border-blue-500 bg-blue-500" 
-          : "border-gray-300 bg-white"
-      )}>
-        {selected && (
-          <div className="w-2 h-2 bg-white rounded-full"></div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// Availability Option Component
-interface AvailabilityOptionProps {
-  value: string;
-  label: string;
-  selected: boolean;
-  onClick: () => void;
-}
-
-function AvailabilityOption({ label, selected, onClick }: AvailabilityOptionProps) {
-  return (
-    <div 
-      onClick={onClick}
-      className={cn(
-        "flex items-center space-x-3 border rounded-lg px-3 py-3 cursor-pointer transition-colors w-56",
-        selected 
-          ? "bg-blue-50 border-blue-200" 
-          : "bg-white border-gray-200 hover:border-gray-300"
-      )}
-    >
-      {/* Radio button */}
-      <div className={cn(
-        "w-5 h-5 rounded-full border-2 flex items-center justify-center",
-        selected 
-          ? "border-blue-500 bg-blue-500" 
-          : "border-gray-300 bg-white"
-      )}>
-        {selected && (
-          <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-        )}
-      </div>
-      
-      <span className="text-gray-900 text-sm">{label}</span>
-    </div>
-  );
-}
 
 // Form Field Component
 interface FormFieldProps {
@@ -164,7 +95,7 @@ function FormField({ label, optional, children }: FormFieldProps) {
   return (
     <div className="space-y-2">
       <div className="flex items-center space-x-1">
-        <label className="text-sm font-semibold text-gray-600">{label}</label>
+        <label className="text-sm font-medium text-gray-900">{label}</label>
         {optional && (
           <span className="text-sm text-gray-500">(Optional)</span>
         )}
@@ -284,33 +215,56 @@ export default function CreateDedicatedCluster() {
                       value={formData.clusterName}
                       onChange={(e) => updateFormData('clusterName', e.target.value)}
                       placeholder="green-marine-lion"
-                      className="h-10"
+                      className="h-9"
                     />
                   </FormField>
                   
                   {/* Provider */}
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <label className="text-sm font-medium text-gray-900">Provider</label>
-                    <div className="flex space-x-3">
-                      <ProviderCard 
-                        selected={formData.provider === 'aws'}
-                        onClick={() => updateFormData('provider', 'aws')}
-                      />
-                      <ProviderCard 
-                        selected={false}
-                        onClick={() => {}}
-                      />
-                      <ProviderCard 
-                        selected={false}
-                        onClick={() => {}}
-                      />
-                    </div>
+                    <Choicebox value={formData.provider} onValueChange={(value) => updateFormData('provider', value)} className="flex space-x-4">
+                      <ChoiceboxItem value="aws" className="min-w-[120px]">
+                        <ChoiceboxItemHeader className="flex-1">
+                          <ChoiceboxItemTitle className="flex items-center justify-center gap-2">
+                            <AwsIcon className="h-5 w-8" />
+                            <span className="text-sm font-semibold">AWS</span>
+                          </ChoiceboxItemTitle>
+                        </ChoiceboxItemHeader>
+                        <ChoiceboxItemContent>
+                          <ChoiceboxItemIndicator />
+                        </ChoiceboxItemContent>
+                      </ChoiceboxItem>
+                      
+                      <ChoiceboxItem value="gcp" className="min-w-[120px]">
+                        <ChoiceboxItemHeader className="flex-1">
+                          <ChoiceboxItemTitle className="flex items-center justify-center gap-2">
+                            <GcpIcon className="h-5 w-8" />
+                            <span className="text-sm font-semibold">GCP</span>
+                          </ChoiceboxItemTitle>
+                        </ChoiceboxItemHeader>
+                        <ChoiceboxItemContent>
+                          <ChoiceboxItemIndicator />
+                        </ChoiceboxItemContent>
+                      </ChoiceboxItem>
+                      
+                      <ChoiceboxItem value="azure" className="min-w-[120px]">
+                        <ChoiceboxItemHeader className="flex-1">
+                          <ChoiceboxItemTitle className="flex items-center justify-center gap-2">
+                            <AzureIcon className="h-5 w-8" />
+                            <span className="text-sm font-semibold">Azure</span>
+                          </ChoiceboxItemTitle>
+                        </ChoiceboxItemHeader>
+                        <ChoiceboxItemContent>
+                          <ChoiceboxItemIndicator />
+                        </ChoiceboxItemContent>
+                      </ChoiceboxItem>
+                    </Choicebox>
                   </div>
                   
                   {/* Region */}
                   <FormField label="Region" optional>
                     <Select value={formData.region} onValueChange={(value) => updateFormData('region', value)}>
-                      <SelectTrigger className="h-10">
+                      <SelectTrigger className="h-9">
                         <SelectValue placeholder="Select region" />
                       </SelectTrigger>
                       <SelectContent>
@@ -323,28 +277,37 @@ export default function CreateDedicatedCluster() {
                   </FormField>
                   
                   {/* Availability */}
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <label className="text-sm font-medium text-gray-900">Availability</label>
-                    <div className="flex space-x-3">
-                      <AvailabilityOption
-                        value="single-az"
-                        label="Single AZ"
-                        selected={formData.availability === 'single-az'}
-                        onClick={() => updateFormData('availability', 'single-az')}
-                      />
-                      <AvailabilityOption
-                        value="multi-az"
-                        label="Multi AZ"
-                        selected={formData.availability === 'multi-az'}
-                        onClick={() => updateFormData('availability', 'multi-az')}
-                      />
-                    </div>
+                    <Choicebox value={formData.availability} onValueChange={(value) => updateFormData('availability', value)} className="flex space-x-4">
+                      <ChoiceboxItem value="single-az" className="min-w-[120px]">
+                        <ChoiceboxItemHeader className="flex-1">
+                          <ChoiceboxItemTitle className="text-sm font-medium">
+                            Single AZ
+                          </ChoiceboxItemTitle>
+                        </ChoiceboxItemHeader>
+                        <ChoiceboxItemContent>
+                          <ChoiceboxItemIndicator />
+                        </ChoiceboxItemContent>
+                      </ChoiceboxItem>
+                      
+                      <ChoiceboxItem value="multi-az" className="min-w-[120px]">
+                        <ChoiceboxItemHeader className="flex-1">
+                          <ChoiceboxItemTitle className="text-sm font-medium">
+                            Multi AZ
+                          </ChoiceboxItemTitle>
+                        </ChoiceboxItemHeader>
+                        <ChoiceboxItemContent>
+                          <ChoiceboxItemIndicator />
+                        </ChoiceboxItemContent>
+                      </ChoiceboxItem>
+                    </Choicebox>
                   </div>
                   
                   {/* Zone Selection */}
                   <FormField label="Select a zone">
                     <Select value={formData.zone} onValueChange={(value) => updateFormData('zone', value)}>
-                      <SelectTrigger className="h-10">
+                      <SelectTrigger className="h-9">
                         <SelectValue placeholder="Select zone" />
                       </SelectTrigger>
                       <SelectContent>
@@ -358,7 +321,7 @@ export default function CreateDedicatedCluster() {
                   {/* Tiers */}
                   <FormField label="Tiers">
                     <Select value={formData.tier} onValueChange={(value) => updateFormData('tier', value)}>
-                      <SelectTrigger className="h-10">
+                      <SelectTrigger className="h-9">
                         <SelectValue placeholder="Select tier" />
                       </SelectTrigger>
                       <SelectContent>
@@ -374,7 +337,7 @@ export default function CreateDedicatedCluster() {
                       value={formData.label}
                       onChange={(e) => updateFormData('label', e.target.value)}
                       placeholder="Content"
-                      className="h-8"
+                      className="h-9"
                     />
                   </FormField>
                   
@@ -384,7 +347,7 @@ export default function CreateDedicatedCluster() {
                       value={formData.redpandaVersion}
                       onChange={(e) => updateFormData('redpandaVersion', e.target.value)}
                       placeholder="23.2.18"
-                      className="h-10"
+                      className="h-9"
                     />
                   </FormField>
                 </div>
@@ -392,7 +355,7 @@ export default function CreateDedicatedCluster() {
               
               {/* Form Actions */}
               <div className="mt-8 pt-6">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md">
                   Next
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
