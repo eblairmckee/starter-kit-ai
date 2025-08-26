@@ -8,7 +8,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/redpanda-ui/breadcrumb';
+} from '@/redpanda-ui/components/breadcrumb';
 
 export const DemoBreadcrumbs = () => {
   return (

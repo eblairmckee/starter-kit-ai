@@ -39,7 +39,7 @@ export default defineConfig({
   tools: {
     postcss: {
       postcssOptions: {
-        plugins: [require('@tailwindcss/postcss'), require('autoprefixer')],
+        plugins: [require('@tailwindcss/postcss')],
       },
     },
     rspack: {

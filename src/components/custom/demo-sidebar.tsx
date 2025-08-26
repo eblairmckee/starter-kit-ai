@@ -23,8 +23,8 @@ import {
   TrendingUp,
   Workflow,
 } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/redpanda-ui/avatar';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/redpanda-ui/collapsible';
+import { Avatar, AvatarFallback, AvatarImage } from '@/redpanda-ui/components/avatar';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/redpanda-ui/components/collapsible';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,8 +33,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/redpanda-ui/dropdown-menu';
-import { MCPIcon } from '@/components/redpanda-ui/icons';
+} from '@/redpanda-ui/components/dropdown-menu';
+import { MCPIcon } from '@/redpanda-ui/components/icons';
 import {
   Sidebar,
   SidebarContent,
@@ -49,9 +49,9 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
-} from '@/components/redpanda-ui/sidebar';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
+} from '@/redpanda-ui/components/sidebar';
+import { useIsMobile } from '@/redpanda-ui/lib/use-mobile';
+import { cn } from '@/redpanda-ui/lib/utils';
 
 const REDPANDA_LOGO_URL = 'https://pbs.twimg.com/profile_images/1542929095507558402/P_MSXBQB_400x400.jpg';
 const REDPANDA_USER_AVATAR_URL = 'https://avatars.githubusercontent.com/u/9860550?v=4';
