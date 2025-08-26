@@ -10,13 +10,7 @@
     "format": "biome format --write && biome check --write --unsafe",
     "type:check": "tsc --noEmit --incremental",
     "preview": "rsbuild preview",
-    "test": "vitest run",
-    "shadcn:ui": "bun scripts/shadcn-ui.tsx",
-    "shadcn:ui:add-all": "bun scripts/shadcn-ui.tsx --add-all",
-    "shadcn:ui:add-all-force": "bun scripts/shadcn-ui.tsx --add-all --force",
-    "shadcn:ui:add-missing": "bun scripts/shadcn-ui.tsx --add-missing",
-    "shadcn:ui:diff": "bun scripts/shadcn-ui.tsx --diff",
-    "shadcn:ui:force": "bun scripts/shadcn-ui.tsx --force"
+    "test": "vitest run"
   },
   "dependencies": {
     "@autoform/react": "^4.0.0",
