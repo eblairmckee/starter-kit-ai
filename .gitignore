@@ -23,8 +23,3 @@ yarn-error.log*
 .env*.local
 .vercel
 next-env.d.ts
-
-# playground playwright test reports
-packages/playground/build-archive.log
-playwright-report
-test-results

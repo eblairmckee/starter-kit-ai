@@ -2,8 +2,8 @@
 
 import { DemoBreadcrumbs } from '@/components/custom/demo-breadcrumbs';
 import { DemoSidebar } from '@/components/custom/demo-sidebar';
-import { Separator } from '@/components/redpanda-ui/separator';
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/redpanda-ui/sidebar';
+import { Separator } from '@/redpanda-ui/components/separator';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/redpanda-ui/components/sidebar';
 
 export const PageDemo = () => {
   return (
