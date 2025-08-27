@@ -2,8 +2,6 @@
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
-// Note: zodResolver would be imported from '@hookform/resolvers/zod' in a real app
-import * as z from 'zod';
 import { CreditCard, Heart, MapPin, User, Crown, Star, Shield } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/redpanda-ui/components/card';
@@ -17,38 +15,31 @@ import { defineStepper } from '../../components/redpanda-ui/components/stepper';
 import { RunningRedpanda } from '../../components/redpanda-ui/components/running-redpanda';
 import { Badge } from '../../components/redpanda-ui/components/badge';
 
-// Define form schema
-const signupSchema = z.object({
+// Define form data type
+type SignupFormData = {
   // Account Information
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  confirmPassword: z.string(),
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  
-  // Plan Selection
-  plan: z.enum(['basic', 'premium', 'ultimate'], {
-    required_error: 'Please select a subscription plan',
-  }),
-  
-  // Payment Information
-  cardNumber: z.string().min(16, 'Please enter a valid card number'),
-  expiryDate: z.string().min(5, 'Please enter expiry date (MM/YY)'),
-  cvv: z.string().min(3, 'Please enter CVV'),
-  cardName: z.string().min(1, 'Cardholder name is required'),
-  
-  // Billing Address
-  address: z.string().min(1, 'Address is required'),
-  city: z.string().min(1, 'City is required'),
-  state: z.string().min(1, 'State is required'),
-  zipCode: z.string().min(5, 'ZIP code is required'),
-  country: z.string().min(1, 'Country is required'),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
+  email: string;
+  password: string;
+  confirmPassword: string;
+  firstName: string;
+  lastName: string;
 
-type SignupFormData = z.infer<typeof signupSchema>;
+  // Plan Selection
+  plan: 'basic' | 'premium' | 'ultimate' | '';
+
+  // Payment Information
+  cardNumber: string;
+  expiryDate: string;
+  cvv: string;
+  cardName: string;
+
+  // Billing Address
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+};
 
 // Define stepper steps
 const { Stepper, useStepper } = defineStepper(
@@ -118,14 +109,13 @@ function RedPandaSignup() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   
   const form = useForm<SignupFormData>({
-    // resolver: zodResolver(signupSchema), // Would use zodResolver in real app
     defaultValues: {
       email: '',
       password: '',
       confirmPassword: '',
       firstName: '',
       lastName: '',
-      plan: undefined,
+      plan: '',
       cardNumber: '',
       expiryDate: '',
       cvv: '',
@@ -141,6 +131,80 @@ function RedPandaSignup() {
   const selectedPlan = form.watch('plan');
   const currentPlan = plans.find(p => p.id === selectedPlan);
 
+  const validateStep = (stepId: string): boolean => {
+    const values = form.getValues();
+
+    switch (stepId) {
+      case 'account':
+        if (!values.firstName.trim()) {
+          form.setError('firstName', { message: 'First name is required' });
+          return false;
+        }
+        if (!values.lastName.trim()) {
+          form.setError('lastName', { message: 'Last name is required' });
+          return false;
+        }
+        if (!values.email.trim() || !values.email.includes('@')) {
+          form.setError('email', { message: 'Please enter a valid email address' });
+          return false;
+        }
+        if (values.password.length < 8) {
+          form.setError('password', { message: 'Password must be at least 8 characters' });
+          return false;
+        }
+        if (values.password !== values.confirmPassword) {
+          form.setError('confirmPassword', { message: "Passwords don't match" });
+          return false;
+        }
+        return true;
+
+      case 'plan':
+        if (!values.plan) {
+          form.setError('plan', { message: 'Please select a subscription plan' });
+          return false;
+        }
+        return true;
+
+      case 'payment':
+        if (!values.cardName.trim()) {
+          form.setError('cardName', { message: 'Cardholder name is required' });
+          return false;
+        }
+        if (values.cardNumber.length < 16) {
+          form.setError('cardNumber', { message: 'Please enter a valid card number' });
+          return false;
+        }
+        if (!values.expiryDate.trim()) {
+          form.setError('expiryDate', { message: 'Please enter expiry date' });
+          return false;
+        }
+        if (values.cvv.length < 3) {
+          form.setError('cvv', { message: 'Please enter CVV' });
+          return false;
+        }
+        if (!values.address.trim()) {
+          form.setError('address', { message: 'Address is required' });
+          return false;
+        }
+        if (!values.city.trim()) {
+          form.setError('city', { message: 'City is required' });
+          return false;
+        }
+        if (!values.state.trim()) {
+          form.setError('state', { message: 'State is required' });
+          return false;
+        }
+        if (!values.zipCode.trim()) {
+          form.setError('zipCode', { message: 'ZIP code is required' });
+          return false;
+        }
+        return true;
+
+      default:
+        return true;
+    }
+  };
+
   const onSubmit = async (data: SignupFormData) => {
     if (current.id === 'confirmation') {
       setIsSubmitting(true);
@@ -150,12 +214,12 @@ function RedPandaSignup() {
       setIsSubmitting(false);
       return;
     }
-    
+
+    // Clear previous errors
+    form.clearErrors();
+
     // Validate current step
-    const fieldsToValidate = getFieldsForStep(current.id);
-    const isValid = await form.trigger(fieldsToValidate);
-    
-    if (isValid) {
+    if (validateStep(current.id)) {
       next();
     }
   };
