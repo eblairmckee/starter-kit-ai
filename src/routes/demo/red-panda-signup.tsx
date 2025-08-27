@@ -224,18 +224,6 @@ function RedPandaSignup() {
     }
   };
 
-  const getFieldsForStep = (stepId: string): (keyof SignupFormData)[] => {
-    switch (stepId) {
-      case 'account':
-        return ['email', 'password', 'confirmPassword', 'firstName', 'lastName'];
-      case 'plan':
-        return ['plan'];
-      case 'payment':
-        return ['cardNumber', 'expiryDate', 'cvv', 'cardName', 'address', 'city', 'state', 'zipCode', 'country'];
-      default:
-        return [];
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 p-4">
