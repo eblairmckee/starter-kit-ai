@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { PageDemo } from './page-demo';
+import { DinnerWizard } from './dinner-wizard';
 
 export const demoRouter = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ export const demoRouter = createBrowserRouter([
       {
         path: 'page-demo',
         element: <PageDemo />,
+      },
+      {
+        path: 'dinner-wizard',
+        element: <DinnerWizard />,
       },
     ],
   },
