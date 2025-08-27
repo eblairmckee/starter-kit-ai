@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { PageDemo } from './page-demo';
+import { RedPandaSignup } from './red-panda-signup';
 
 export const demoRouter = createBrowserRouter([
   {
@@ -8,11 +9,15 @@ export const demoRouter = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/page-demo" replace />,
+        element: <Navigate to="/red-panda-signup" replace />,
       },
       {
         path: 'page-demo',
         element: <PageDemo />,
+      },
+      {
+        path: 'red-panda-signup',
+        element: <RedPandaSignup />,
       },
     ],
   },

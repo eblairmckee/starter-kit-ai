@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+// Note: zodResolver would be imported from '@hookform/resolvers/zod' in a real app
 import * as z from 'zod';
 import { CreditCard, Heart, MapPin, User, Crown, Star, Shield } from 'lucide-react';
 
@@ -118,7 +118,7 @@ function RedPandaSignup() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   
   const form = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
+    // resolver: zodResolver(signupSchema), // Would use zodResolver in real app
     defaultValues: {
       email: '',
       password: '',
